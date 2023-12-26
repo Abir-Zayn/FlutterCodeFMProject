@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:usercreationpage/screens/signinpage.dart';
-import 'package:usercreationpage/widgets/custom_scaffold.dart';
+import 'package:user_create_login/services/firebase_auth_methods.dart';
+import 'package:user_create_login/widgets/custom_scaffold.dart';
+import 'package:user_create_login/screens/signinpage.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -11,6 +13,39 @@ class SignUp extends StatefulWidget {
 
 class _SignUp extends State<SignUp> {
   final _formSignUpKey = GlobalKey<FormState>();
+
+  //Adding Controllers
+
+  //Some of Controllers hasnt been initiliazed yet
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    // Dispose of the controllers when the widget is disposed
+    _nameController.dispose();
+    _emailController.dispose();
+    _mobileController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void signUpUser() async {
+    FirebaseAuthMethods(FirebaseAuth.instance).signUpwithEmail(
+        mail: _emailController.text,
+        password: _passwordController.text,
+        context: context);
+    //Succesfully login will return to SignIn page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SignIn()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +62,7 @@ class _SignUp extends State<SignUp> {
             flex: 9,
             child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(25, 50, 32, 20),
+                padding: const EdgeInsets.fromLTRB(25, 50, 32, 100),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -47,7 +82,7 @@ class _SignUp extends State<SignUp> {
                       ),
                     ),
                     const SizedBox(
-                      height: 40.0,
+                      height: 50.0,
                     ),
                     // Sign Up Form
                     Form(
@@ -72,10 +107,11 @@ class _SignUp extends State<SignUp> {
                           ),
 
                           const SizedBox(
-                            height: 15.0,
+                            height: 30.0,
                           ),
 
                           TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                                 label: const Text('Email '),
                                 hintText: 'Enter Your Email',
@@ -91,7 +127,7 @@ class _SignUp extends State<SignUp> {
                           ),
 
                           const SizedBox(
-                            height: 15.0,
+                            height: 30.0,
                           ),
 
                           TextField(
@@ -110,11 +146,12 @@ class _SignUp extends State<SignUp> {
                           ),
 
                           const SizedBox(
-                            height: 15.0,
+                            height: 30.0,
                           ),
 
                           //Enter your Password
                           TextFormField(
+                            controller: _passwordController,
                             obscureText: true,
                             obscuringCharacter: '#',
                             validator: (value) {
@@ -139,7 +176,7 @@ class _SignUp extends State<SignUp> {
                                         BorderSide(color: Colors.black))),
                           ),
                           const SizedBox(
-                            height: 15.0,
+                            height: 30.0,
                           ),
 
                           //Confirm your Password
@@ -187,14 +224,17 @@ class _SignUp extends State<SignUp> {
                                 horizontal: 90.0,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: signUpUser,
                             child: const Text('Submit'),
+                          ),
+                          const SizedBox(
+                            height: 30.0,
                           ),
 
                           Divider(color: Colors.black),
 
                           const SizedBox(
-                            height: 20.0,
+                            height: 40.0,
                           ),
 
                           Column(
