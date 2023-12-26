@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:usercreationpage/screens/forgetpassword.dart';
-import 'package:usercreationpage/screens/signuppage.dart';
-import 'package:usercreationpage/widgets/custom_scaffold.dart';
+import 'package:user_create_login/services/firebase_auth_methods.dart';
+import 'package:user_create_login/widgets/custom_scaffold.dart';
+import 'package:user_create_login/screens/signuppage.dart';
+import 'package:user_create_login/screens/forgetpassword.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -13,6 +15,18 @@ class SignIn extends StatefulWidget {
 class _SignIn extends State<SignIn> {
   final _formSignKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void signInUser() async {
+    FirebaseAuthMethods(FirebaseAuth.instance).signUpwithEmail(
+        mail: _emailController.text,
+        password: _passwordController.text,
+        context: context);
+
+    //Successfully sign in will get user to Product Page
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +181,7 @@ class _SignIn extends State<SignIn> {
                             horizontal: 100.0,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: signInUser,
                         child: const Text('Sign In'),
                       ),
 
